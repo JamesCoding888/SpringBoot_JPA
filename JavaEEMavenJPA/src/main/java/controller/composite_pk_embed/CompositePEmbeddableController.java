@@ -7,7 +7,7 @@ public class CompositePEmbeddableController {
 		// Create (建立 Table 的 Hibernate SQL 語法，請參 persisteByIdClass() method)
 		
 		// Insert
-		CompositePrimaryKeysEmbedService.persistByEmbeddableIdClass();		
+//		CompositePrimaryKeysEmbedService.persistByEmbeddableIdClass();		
 
 		// Query
 		CompositePrimaryKeysEmbedService.queryByCompositeEmbeddableIdClass();
