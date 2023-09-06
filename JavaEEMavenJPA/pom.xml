@@ -69,6 +69,24 @@
 		<scope>test</scope>  <!-- This scope indicates that it's used for testing purposes -->
 	</dependency>
 
+
+	<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest -->
+	<!-- <dependency>
+		<groupId>org.hamcrest</groupId>
+		<artifactId>hamcrest</artifactId>
+		<version>2.2</version>
+		<scope>test</scope>
+	</dependency> -->
+
+	<!-- https://mvnrepository.com/artifact/org.testinfected.hamcrest-matchers/jpa-matchers -->
+	<!-- <dependency>
+		<groupId>org.testinfected.hamcrest-matchers</groupId>
+		<artifactId>jpa-matchers</artifactId>
+		<version>1.8</version>
+		<scope>test</scope>
+	</dependency> -->
+	
+	
 	
 	
 </dependencies>

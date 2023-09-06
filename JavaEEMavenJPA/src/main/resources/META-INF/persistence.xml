@@ -46,8 +46,8 @@
         <class>entity.Account</class>
         <!-- Entity Book -->
         <class>entity.Book</class>
-        <!-- Entity C01SelectWhereLiterals -->
-        <class>entity.C01SelectWhereLiterals</class>                  
+        <!-- Entity EmployeeWhereLiteral -->
+        <class>entity.jpql.where.EmployeeWhereLiteral</class>                  
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />            
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mydb?characterEncoding=utf-8" />
