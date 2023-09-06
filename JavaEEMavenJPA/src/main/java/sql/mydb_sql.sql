@@ -23,6 +23,7 @@ select * from mydb.project;
 select * from mydb.s_project;
 select * from mydb.project_embedded;
 select * from mydb.T_BILLING_PERIOD;
+SELECT * FROM mydb.employee_where_literal;
 
 -- CRUDServices.queryUserInheritance_One2One(em, 3); 
     select
