@@ -22,16 +22,19 @@ public class NativeController {
 	
 
 	public static void main(String[] args) {	
-		insert();
-		queryEqual();
-		queryEqual2();
-		queryLarger();
-		queryEnum();
-		queryDate();
-		queryBoolean();
-		queryASC();
-		queryDESC();
-		queryDISTINCT();
+//		insert();
+//		queryEqual();
+//		queryEqual2();
+//		queryLarger();
+//		queryEnum();
+//		queryDate();
+//		queryBoolean();
+//		queryASC();
+//		queryDESC();
+//		queryDISTINCT();
+//		queryInnerJoin();
+//		queryInnerJoinError();
+
 
 	}
 
@@ -303,7 +306,98 @@ public class NativeController {
 			em.close();
 			emf.close();	
 		}	
+	}	
+	
+	public static void queryInnerJoin() {
+	    EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	    	/*
+				Hibernate: 
+				    SELECT
+				        e1.id AS e1_id,
+				        e2.id AS e2_id,
+				        e1.salary AS e1_salary,
+				        e2.salary AS e2_salary 
+				    FROM
+				        employee_jpql_literal e1 
+				    INNER JOIN
+				        employee_native_literal e2 
+				            ON e1.name = e2.name	    	
+	    	*/
+	        Query query = em.createNativeQuery("SELECT e1.id AS e1_id, " + 
+	        										  "e1.salary AS e1_salary, " +
+	        										  "e1.name AS e1_name, " +
+	        										  "e2.id AS e2_id, " +
+	        										  "e2.salary AS e2_salary, " +
+	        										  "e2.name AS e2_name " +
+	        										  "FROM employee_jpql_literal e1 " +
+	        										  "INNER JOIN employee_native_literal e2 " +
+	        										  "ON e1.name = e2.name");	        	         
+	        List<Object[]> rows = query.getResultList();
+	        // Java 1.7
+	        /*
+	        for (Object[] row : rows) {
+	            Integer e1Id = (Integer) row[0];
+	            Integer e1Salary = (Integer) row[1];
+	            String e1Name = (String) row[2];
+	            Integer e2Id = (Integer) row[3];
+	            Integer e2Salary = (Integer) row[4];
+	            String e2Name = (String) row[5];
+	            System.out.printf("Id1: %5d | Salary1: %5d | Name1: %8s | Id2: %5d | Salary2: %5d | Name2: %8s \n", row[0], row[1], row[2], row[3], row[4], row[5]);
+	        }
+	        */
+	        // Java 1.8 (same result as 1.7 version)
+	        rows.forEach(row -> System.out.printf("Id1: %5d | Salary1: %5d | Name1: %8s | Id2: %5d | Salary2: %5d | Name2: %8s \n", row[0], row[1], row[2], row[3], row[4], row[5]));
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        em.close();
+	        emf.close();
+	    }
 	}
+	
+	public static void queryInnerJoinError() {
+	    EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	    	/*
+				The error you're encountering, "javax.persistence.PersistenceException: org.hibernate.loader.custom.NonUniqueDiscoveredSqlAliasException: 
+				
+				Encountered a duplicated sql alias [id] during auto-discovery of a native-sql query," 
+				is occurring because both of your native SQL queries are returning columns with the same alias (id) in the result set. 
+				
+				Hibernate is trying to map the result set to the entity objects, but it can't determine which id column corresponds to which entity.	    	 
+	    	*/
+	    	Query query = em.createNativeQuery("SELECT e1.id, " + 
+													  "e1.salary, " +
+													  "e1.name, " +
+													  "e2.id, " +
+													  "e2.salary, " +
+													  "e2.name " +
+													  "FROM employee_jpql_literal e1 " +
+													  "INNER JOIN employee_native_literal e2 " +
+													  "ON e1.name = e2.name");
+	        List<Object[]> rows = query.getResultList();
+	        for (Object[] row : rows) {
+	            Integer e1Id = (Integer) row[0];
+	            Integer e1Salary = (Integer) row[1];
+	            String e1Name = (String) row[2];
+	            Integer e2Id = (Integer) row[3];
+	            Integer e2Salary = (Integer) row[4];
+	            String e2Name = (String) row[5];
+	            System.out.printf("Id1: %5d | Salary1: %5d | Name1: %8s | Id2: %5d | Salary2: %5d | Name2: %8s \n", e1Id, e1Salary, e1Name, e2Id, e2Salary, e2Name);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        em.close();
+	        emf.close();
+	    }
+	}
+	
+	
+	
 	
 	
 }

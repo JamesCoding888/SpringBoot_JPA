@@ -69,9 +69,9 @@ public class Project {
 		joinColumns = {
 				@JoinColumn(name = "project_id", referencedColumnName = "id")},
 		inverseJoinColumns = {
-				@JoinColumn(name = "position_id", referencedColumnName = "id")
+				@JoinColumn(name = "designer_id", referencedColumnName = "id")
 		})
-	 */
+	*/
 //	/*
 	@ManyToMany(mappedBy = "projects")
 //	*/

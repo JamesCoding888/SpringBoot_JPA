@@ -339,6 +339,8 @@ public class CRUDServices {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
 		EntityManager em = emf.createEntityManager();		
 		// JPQL: 找出所有 Designer 物件及與其關聯的 Project 物件
+		// JPQL 查詢語法，使用 INNER JOIN 或 LEFT JOIN，加不加 'ON' 關鍵字，取決於 Entity 類別是否有藉由 '關聯用的標註類別' （e.g., @ManyToMany） 決定連結欄位，且 JOIN 的雙方表格必須同時具備對應的資料
+		// 本範例中，因 Entity class (i.e., Designer class and Project class)已加上 '關聯用的標註類別'，因此不需加上 'ON' 關鍵字
 		TypedQuery<Designer> query = em.createQuery("from Designer d LEFT JOIN FETCH d.projects", Designer.class); 
 		/*
 			Hibernate: 
@@ -388,6 +390,8 @@ public class CRUDServices {
 			System.out.println(sb);		
 		}
 		// JPQL: 找出所有 ProjectEmbedded 物件及與其關聯的 Period 物件
+		// JPQL 查詢語法，使用 INNER JOIN 或 LEFT JOIN，加不加 'ON' 關鍵字，取決於 Entity 類別是否有藉由 '關聯用的標註類別' （e.g., @ManyToMany） 決定連結欄位，且 JOIN 的雙方表格必須同時具備對應的資料
+		// 本範例中，因 Entity class (i.e., Designer class and Project class)已加上 '關聯用的標註類別'，因此不需加上 'ON' 關鍵字
 		TypedQuery<ProjectEmbedded> query2 = em.createQuery("from ProjectEmbedded pje LEFT JOIN FETCH pje.billingPeriods", ProjectEmbedded.class); 
 		/*
 			Hibernate: 

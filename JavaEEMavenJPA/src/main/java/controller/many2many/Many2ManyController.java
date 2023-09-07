@@ -15,8 +15,8 @@ public class Many2ManyController {
 		
 		// Query
 //		CRUDServices.queryDesigner(1);
-//		CRUDServices.queryDesigners();
-		CRUDServices.loadProject();
+		CRUDServices.queryDesigners();
+//		CRUDServices.loadProject();
 	}
 		
 }

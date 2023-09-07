@@ -40,7 +40,7 @@ public class JPQLController {
 		    ) engine=InnoDB
 	*/
 	public static void main(String[] args) {	
-		insert();
+//		insert();
 //		queryEqual();
 //		queryLarger();
 //		queryEnum();
@@ -54,7 +54,8 @@ public class JPQLController {
 //		queryPosition();
 //		queryMultiColumnsWithObjectArray();
 //		queryMultiColumnsWithObjectArrayWithoutEntity();
-		queryTuple();
+//		queryTuple();
+		queryInnerJoinJPQL();
 	}
 
 	public static void insert() {
@@ -539,5 +540,50 @@ public class JPQLController {
 			emf.close();
 		}		
 	}
+	
+	
+	public static void queryInnerJoinJPQL() {
+	    EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	    	/*
+				Hibernate: 
+				    select
+				        employeejp0_.id as col_0_0_,
+				        employeejp0_.salary as col_1_0_,
+				        employeejp0_.name as col_2_0_,
+				        employeena1_.id as col_3_0_,
+				        employeena1_.salary as col_4_0_,
+				        employeena1_.name as col_5_0_ 
+				    from
+				        employee_jpql_literal employeejp0_ 
+				    inner join
+				        employee_native_literal employeena1_ 
+				            on (
+				                employeejp0_.name=employeena1_.name
+				            )	
+	    	*/
+	        Query query = em.createQuery("SELECT e1.id, " + 
+	        									"e1.salary, " +
+	        									"e1.name, " +
+	        									"e2.id, " +
+	        									"e2.salary, " +
+	        									"e2.name " +
+	        									"FROM EmployeeJPQLLiteral e1 " +
+	        									"INNER JOIN FETCH EmployeeNativeLiteral e2 " +
+	        									"ON e1.name = e2.name");	        	         
+	        List<Object[]> rows = query.getResultList();
+	        rows.forEach(row -> System.out.printf("Id1: %5d | Salary1: %5d | Name1: %8s | Id2: %5d | Salary2: %5d | Name2: %8s \n", row[0], row[1], row[2], row[3], row[4], row[5]));
+			List<String> actualValues = rows.stream().map(s -> Arrays.toString(s)).collect(Collectors.toList());
+			actualValues.forEach(System.out::println);	
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        em.close();
+	        emf.close();
+	    }
+	}
+	
+
 	
 }
