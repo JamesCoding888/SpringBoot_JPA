@@ -23,7 +23,20 @@ select * from mydb.project;
 select * from mydb.s_project;
 select * from mydb.project_embedded;
 select * from mydb.T_BILLING_PERIOD;
-SELECT * FROM mydb.employee_where_literal;
+SELECT * FROM mydb.employee_jpql_literal;
+SELECT * FROM mydb.employee_native_literal;
+SELECT e.name from mydb.employee_jpql_literal as e where e.name = 'ROSE';
+SELECT name, salary from employee_jpql_literal;
+SELECT e.id, e.name, e.salary FROM employee_native_literal e WHERE e.salary > 2000.0 ORDER BY e.salary;
+SELECT e.id, e.name, e.salary FROM employee_native_literal e WHERE e.salary > 2000.0;
+SELECT e.role FROM employee_native_literal e WHERE e.role = 'IT' ;
+SELECT e.local_date FROM employee_native_literal e WHERE e.local_date > '2016-05-01' ;
+SELECT e1.id, e1.salary FROM employee_jpql_literal e1 INNER JOIN employee_native_literal e2 ON e1.name = e2.name;
+SELECT e1.id, e1.salary, e2.id, e2.salary FROM employee_jpql_literal e1 INNER JOIN employee_native_literal e2 ON e1.name = e2.name;
+SELECT e1.id AS e1_id, e1.salary AS e1_salary, e2.id AS e2_id, e2.salary AS e2_salary FROM employee_jpql_literal e1 INNER JOIN employee_native_literal e2 ON e1.name = e2.name;
+
+
+
 
 -- CRUDServices.queryUserInheritance_One2One(em, 3); 
     select
