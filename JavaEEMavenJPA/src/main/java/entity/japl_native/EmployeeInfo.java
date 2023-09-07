@@ -1,4 +1,4 @@
-package entity.jpql.where;
+package entity.japl_native;
 
 public class EmployeeInfo {
 	

@@ -1,4 +1,4 @@
-package controller.jpql.where;
+package controller.jpql;
 //import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertThat;
@@ -12,24 +12,24 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import entity.jpql.where.EmployeeInfo;
-import entity.jpql.where.EmployeeWhereLiteral;
-import entity.jpql.where.EmployeeWhereLiteral.Role;
-import entity.jpql.where.EmployeeWhereLiteralMatcher;
+import entity.jpql.EmployeeInfo;
+import entity.jpql.EmployeeJPQLLiteral;
+import entity.jpql.EmployeeJPQLLiteral.Role;
+import entity.jpql.EmployeeJPQLLiteralMatcher;
 import javax.persistence.Tuple;
 import service.embed.SpecificDateTimeSetter;
 
-public class WhereController {
+public class JPQLController {
 
 	// Instantiate the instances
-	static EmployeeWhereLiteral employeeWhereLiteral01;
-	static EmployeeWhereLiteral employeeWhereLiteral02;
-	static EmployeeWhereLiteral employeeWhereLiteral03;
+	static EmployeeJPQLLiteral employeeJPQLLiteral01;
+	static EmployeeJPQLLiteral employeeJPQLLiteral02;
+	static EmployeeJPQLLiteral employeeJPQLLiteral03;
 	
 	/*
 		Hibernate: 
 		    
-		    create table employee_where_literal (
+		    create table employee_jpql_literal (
 		       id integer not null auto_increment,
 		        local_date datetime(6),
 		        name varchar(255),
@@ -74,13 +74,13 @@ public class WhereController {
 			date3.setSpecificDateTime(2016, 1, 10, 0, 0, 0, 0);
 			Date localDate3 = date3.getSpecificDateTime();
 			// 新增
-			employeeWhereLiteral01 = new EmployeeWhereLiteral("Jim", Role.IT, 3000, localDate1, Boolean.TRUE);
-			employeeWhereLiteral02 = new EmployeeWhereLiteral("ROSE", Role.ADMIN, 4000, localDate2, Boolean.FALSE);
-			employeeWhereLiteral03 = new EmployeeWhereLiteral("Denise", Role.IT, 1500, localDate3, Boolean.TRUE);
+			employeeJPQLLiteral01 = new EmployeeJPQLLiteral("Jim", Role.IT, 3000, localDate1, Boolean.TRUE);
+			employeeJPQLLiteral02 = new EmployeeJPQLLiteral("ROSE", Role.ADMIN, 4000, localDate2, Boolean.FALSE);
+			employeeJPQLLiteral03 = new EmployeeJPQLLiteral("Denise", Role.IT, 1500, localDate3, Boolean.TRUE);
 			// 保存
-			em.persist(employeeWhereLiteral01);
-			em.persist(employeeWhereLiteral02);
-			em.persist(employeeWhereLiteral03);			
+			em.persist(employeeJPQLLiteral01);
+			em.persist(employeeJPQLLiteral02);
+			em.persist(employeeJPQLLiteral03);			
 			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,22 +101,22 @@ public class WhereController {
 		/*
 			Hibernate: 
 			    select
-			        employeewh0_.id as id1_3_,
-			        employeewh0_.local_date as local_da2_3_,
-			        employeewh0_.name as name3_3_,
-				       employeewh0_.role as role4_3_,
-				       employeewh0_.salary as salary5_3_,
-				       employeewh0_.valid as valid6_3_ 
-				   from
-				       employee_where_literal employeewh0_ 
-				   where
-				       employeewh0_.name='Rose'						
+			        employeejp0_.id as id1_3_,
+			        employeejp0_.local_date as local_da2_3_,
+			        employeejp0_.name as name3_3_,
+			        employeejp0_.role as role4_3_,
+			        employeejp0_.salary as salary5_3_,
+			        employeejp0_.valid as valid6_3_ 
+			    from
+			        employee_jpql_literal employeejp0_ 
+			    where
+			        employeejp0_.name='Rose'					
 		*/
-		Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e WHERE e.name = 'Rose' ");
-		List<EmployeeWhereLiteral> resultList = query.getResultList();
+		Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e WHERE e.name = 'Rose' ");
+		List<EmployeeJPQLLiteral> resultList = query.getResultList();
 		resultList.forEach(s -> System.out.printf("Name: %s\n", s.getName())); // Name: ROSE
-		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeWhereLiteral02 物件實例
-		assertThat(resultList, hasItems(employeeWhereLiteral02));
+		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeJPQLLiteral02 物件實例
+		assertThat(resultList, hasItems(employeeJPQLLiteral02));
 		} catch(Exception e) {			
 			e.printStackTrace();
 		} finally {
@@ -133,22 +133,22 @@ public class WhereController {
 		/*
 			Hibernate: 
 			    select
-			        employeewh0_.id as id1_3_,
-			        employeewh0_.local_date as local_da2_3_,
-			        employeewh0_.name as name3_3_,
-			        employeewh0_.role as role4_3_,
-			        employeewh0_.salary as salary5_3_,
-			        employeewh0_.valid as valid6_3_ 
+			        employeejp0_.id as id1_3_,
+			        employeejp0_.local_date as local_da2_3_,
+			        employeejp0_.name as name3_3_,
+			        employeejp0_.role as role4_3_,
+			        employeejp0_.salary as salary5_3_,
+			        employeejp0_.valid as valid6_3_ 
 			    from
-			        employee_where_literal employeewh0_ 
+			        employee_jpql_literal employeejp0_ 
 			    where
-			        employeewh0_.salary>2000.0			 
+			        employeejp0_.salary>2000.0		 
 		*/
-		Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e WHERE e.salary > 2000.0 ");
-		List<EmployeeWhereLiteral> resultList = query.getResultList();
+		Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e WHERE e.salary > 2000.0 ");
+		List<EmployeeJPQLLiteral> resultList = query.getResultList();
 		resultList.forEach(s -> System.out.printf("Name: %s\n", s.getName())); 
-		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeWhereLiteral02 物件實例
-		assertThat(resultList, hasItems(employeeWhereLiteral02));
+		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeJPQLLiteral02 物件實例
+		assertThat(resultList, hasItems(employeeJPQLLiteral02));
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -164,22 +164,23 @@ public class WhereController {
 		/*
 			Hibernate: 
 			    select
-			        employeewh0_.id as id1_3_,
-			        employeewh0_.local_date as local_da2_3_,
-			        employeewh0_.name as name3_3_,
-			        employeewh0_.role as role4_3_,
-			        employeewh0_.salary as salary5_3_,
-			        employeewh0_.valid as valid6_3_ 
+			        employeejp0_.id as id1_3_,
+			        employeejp0_.local_date as local_da2_3_,
+			        employeejp0_.name as name3_3_,
+			        employeejp0_.role as role4_3_,
+			        employeejp0_.salary as salary5_3_,
+			        employeejp0_.valid as valid6_3_ 
 			    from
-			        employee_where_literal employeewh0_ 
+			        employee_jpql_literal employeejp0_ 
 			    where
+			        employeejp0_.role='IT'
 			        employeewh0_.role=?		 
 		*/
-		Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e WHERE e.role = 'IT' ");
-		List<EmployeeWhereLiteral> resultList = query.getResultList();
+		Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e WHERE e.role = 'IT' ");
+		List<EmployeeJPQLLiteral> resultList = query.getResultList();
 		resultList.forEach(s -> System.out.printf("Name: %s\n", s.getName())); 
-		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeWhereLiteral02 物件實例
-		assertThat(resultList, hasItems(employeeWhereLiteral02));
+		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeJPQLLiteral02 物件實例
+		assertThat(resultList, hasItems(employeeJPQLLiteral02));
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -195,22 +196,22 @@ public class WhereController {
 		/*
 			Hibernate: 
 			    select
-			        employeewh0_.id as id1_3_,
-			        employeewh0_.local_date as local_da2_3_,
-			        employeewh0_.name as name3_3_,
-			        employeewh0_.role as role4_3_,
-				       employeewh0_.salary as salary5_3_,
-			        employeewh0_.valid as valid6_3_ 
+			        employeejp0_.id as id1_3_,
+			        employeejp0_.local_date as local_da2_3_,
+			        employeejp0_.name as name3_3_,
+			        employeejp0_.role as role4_3_,
+			        employeejp0_.salary as salary5_3_,
+			        employeejp0_.valid as valid6_3_ 
 			    from
-			        employee_where_literal employeewh0_ 
+			        employee_jpql_literal employeejp0_ 
 			    where
-			        employeewh0_.local_date>'2016-05-01'			 
+			        employeejp0_.local_date>'2016-05-01'
 		*/
-		Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e WHERE e.date > '2016-05-01' ");
-		List<EmployeeWhereLiteral> resultList = query.getResultList();
+		Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e WHERE e.date > '2016-05-01' ");
+		List<EmployeeJPQLLiteral> resultList = query.getResultList();
 		resultList.forEach(s -> System.out.printf("Name: %s\n", s.getName())); 
-		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeWhereLiteral02 物件實例
-		assertThat(resultList, hasItems(employeeWhereLiteral02));
+		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeJPQLLiteral02 物件實例
+		assertThat(resultList, hasItems(employeeJPQLLiteral02));
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -225,23 +226,23 @@ public class WhereController {
 		try {
 		/*
 			Hibernate: 
-				   select
-			        employeewh0_.id as id1_3_,
-			        employeewh0_.local_date as local_da2_3_,
-			        employeewh0_.name as name3_3_,
-			        employeewh0_.role as role4_3_,
-			        employeewh0_.salary as salary5_3_,
-			        employeewh0_.valid as valid6_3_ 
+			    select
+			        employeejp0_.id as id1_3_,
+			        employeejp0_.local_date as local_da2_3_,
+			        employeejp0_.name as name3_3_,
+			        employeejp0_.role as role4_3_,
+			        employeejp0_.salary as salary5_3_,
+			        employeejp0_.valid as valid6_3_ 
 			    from
-			        employee_where_literal employeewh0_ 
+			        employee_jpql_literal employeejp0_ 
 			    where
-			        employeewh0_.valid=0			 
+			        employeejp0_.valid=0		 
 		*/
-		Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e WHERE e.valid = false ");
-		List<EmployeeWhereLiteral> resultList = query.getResultList();
+		Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e WHERE e.valid = false ");
+		List<EmployeeJPQLLiteral> resultList = query.getResultList();
 		resultList.forEach(s -> System.out.printf("Name: %s\n", s.getName()));
-		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeWhereLiteral02 物件實例
-		assertThat(resultList, hasItems(employeeWhereLiteral02));
+		// org.junit.Assert.assertThat 斷言查詢結果的集合物件內，必含有 employeeJPQLLiteral02 物件實例
+		assertThat(resultList, hasItems(employeeJPQLLiteral02));
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -257,33 +258,33 @@ public class WhereController {
 		/*
 			Hibernate: 
 			    select
-			        employeewh0_.id as id1_3_,
-			        employeewh0_.local_date as local_da2_3_,
-				       employeewh0_.name as name3_3_,
-				       employeewh0_.role as role4_3_,
-				       employeewh0_.salary as salary5_3_,
-				       employeewh0_.valid as valid6_3_ 
-				   from
-				       employee_where_literal employeewh0_ 
-				   order by
-			        employeewh0_.salary			 
+			        employeejp0_.id as id1_3_,
+			        employeejp0_.local_date as local_da2_3_,
+			        employeejp0_.name as name3_3_,
+			        employeejp0_.role as role4_3_,
+			        employeejp0_.salary as salary5_3_,
+			        employeejp0_.valid as valid6_3_ 
+			    from
+			        employee_jpql_literal employeejp0_ 
+			    order by
+			        employeejp0_.salary
 		*/
-		Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e ORDER BY e.salary "); // ORDER BY default is ASC
-		List<EmployeeWhereLiteral> resultList = query.getResultList();
+		Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e ORDER BY e.salary "); // ORDER BY default is ASC
+		List<EmployeeJPQLLiteral> resultList = query.getResultList();
 		/*
 			Name: Denise
 			Name: Jim
 			Name: ROSE 
 		*/
 		resultList.forEach(s -> System.out.printf("Name: %s\n", s.getName())); 
-		List<EmployeeWhereLiteral> expectedItems = Arrays.asList(employeeWhereLiteral03, employeeWhereLiteral01, employeeWhereLiteral02);
+		List<EmployeeJPQLLiteral> expectedItems = Arrays.asList(employeeJPQLLiteral03, employeeJPQLLiteral01, employeeJPQLLiteral02);
 		/*
 			Denise
 			Jim
 			ROSE		 
 		*/
 		expectedItems.forEach(s -> System.out.println(s.getName()));
-		assertThat(resultList, EmployeeWhereLiteralMatcher.containsInOrder(expectedItems));
+		assertThat(resultList, EmployeeJPQLLiteralMatcher.containsInOrder(expectedItems));
 		
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -301,33 +302,33 @@ public class WhereController {
 		/*
 			Hibernate: 
 			    select
-			        employeewh0_.id as id1_3_,
-			        employeewh0_.local_date as local_da2_3_,
-			        employeewh0_.name as name3_3_,
-			        employeewh0_.role as role4_3_,
-			        employeewh0_.salary as salary5_3_,
-			        employeewh0_.valid as valid6_3_ 
+			        employeejp0_.id as id1_3_,
+			        employeejp0_.local_date as local_da2_3_,
+			        employeejp0_.name as name3_3_,
+			        employeejp0_.role as role4_3_,
+			        employeejp0_.salary as salary5_3_,
+			        employeejp0_.valid as valid6_3_ 
 			    from
-			        employee_where_literal employeewh0_ 
+			        employee_jpql_literal employeejp0_ 
 			    order by
-			        employeewh0_.salary DESC			 
+			        employeejp0_.salary DESC			 
 		*/
-		Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e ORDER BY e.salary DESC "); 
-		List<EmployeeWhereLiteral> resultList = query.getResultList();
+		Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e ORDER BY e.salary DESC "); 
+		List<EmployeeJPQLLiteral> resultList = query.getResultList();
 		/*
 			Name: ROSE
 			Name: Jim
 			Name: Denise
 		*/
 		resultList.forEach(s -> System.out.printf("Name: %s\n", s.getName())); 
-		List<EmployeeWhereLiteral> expectedItems = Arrays.asList(employeeWhereLiteral02, employeeWhereLiteral01, employeeWhereLiteral03);
+		List<EmployeeJPQLLiteral> expectedItems = Arrays.asList(employeeJPQLLiteral02, employeeJPQLLiteral01, employeeJPQLLiteral03);
 		/*
 			ROSE
 			Jim
 			Denise								
 		*/
 		expectedItems.forEach(s -> System.out.println(s.getName()));
-		assertThat(resultList, EmployeeWhereLiteralMatcher.containsInOrder(expectedItems));
+		assertThat(resultList, EmployeeJPQLLiteralMatcher.containsInOrder(expectedItems));
 		
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -345,11 +346,11 @@ public class WhereController {
 		/*
 			Hibernate: 
 			    select
-			        distinct employeewh0_.name as col_0_0_ 
+			        distinct employeejp0_.name as col_0_0_ 
 			    from
-			        employee_where_literal employeewh0_		 
+			        employee_jpql_literal employeejp0_	 
 		*/
-		Query query = em.createQuery("SELECT DISTINCT e.name FROM EmployeeWhereLiteral e"); 
+		Query query = em.createQuery("SELECT DISTINCT e.name FROM EmployeeJPQLLiteral e"); 
 		List<String> resultList = query.getResultList();
 		resultList.forEach(s -> System.out.printf("Name: %s\n", s)); 		
 		assertThat(resultList, hasItems("Jim"));
@@ -369,7 +370,7 @@ public class WhereController {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
 		EntityManager em = emf.createEntityManager();
 		try {
-			Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e WHERE e.name = '" + name + "'");
+			Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e WHERE e.name = '" + name + "'");
 			List<String> resultList = query.getResultList();
 			resultList.forEach(s -> System.out.printf("Name: %s\n", s));
 		} catch (Exception e) {
@@ -389,24 +390,24 @@ public class WhereController {
 			/*
 				Hibernate: 
 				    select
-				        employeewh0_.id as id1_3_,
-				        employeewh0_.local_date as local_da2_3_,
-				        employeewh0_.name as name3_3_,
-				        employeewh0_.role as role4_3_,
-				        employeewh0_.salary as salary5_3_,
-				        employeewh0_.valid as valid6_3_ 
+				        employeejp0_.id as id1_3_,
+				        employeejp0_.local_date as local_da2_3_,
+				        employeejp0_.name as name3_3_,
+				        employeejp0_.role as role4_3_,
+				        employeejp0_.salary as salary5_3_,
+				        employeejp0_.valid as valid6_3_ 
 				    from
-				        employee_where_literal employeewh0_ 
+				        employee_jpql_literal employeejp0_ 
 				    where
-				        employeewh0_.name=? 
-				        and employeewh0_.salary=?			 
+				        employeejp0_.name=? 
+				        and employeejp0_.salary=?		 
 			*/
-			Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e WHERE e.name = :name AND e.salary = :salary ");
+			Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e WHERE e.name = :name AND e.salary = :salary ");
 			query.setParameter("name", "ROSE");
 			query.setParameter("salary", 4000);
-			List<EmployeeWhereLiteral> resultList = query.getResultList();
+			List<EmployeeJPQLLiteral> resultList = query.getResultList();
 			resultList.forEach(s -> System.out.printf("Name: %s\n", s.getName()));
-			assertThat(resultList, hasItems(employeeWhereLiteral02));
+			assertThat(resultList, hasItems(employeeJPQLLiteral02));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -424,24 +425,24 @@ public class WhereController {
 			/*
 				Hibernate: 
 				    select
-				        employeewh0_.id as id1_3_,
-				        employeewh0_.local_date as local_da2_3_,
-				        employeewh0_.name as name3_3_,
-				        employeewh0_.role as role4_3_,
-				        employeewh0_.salary as salary5_3_,
-				        employeewh0_.valid as valid6_3_ 
+				        employeejp0_.id as id1_3_,
+				        employeejp0_.local_date as local_da2_3_,
+				        employeejp0_.name as name3_3_,
+				        employeejp0_.role as role4_3_,
+				        employeejp0_.salary as salary5_3_,
+				        employeejp0_.valid as valid6_3_ 
 				    from
-				        employee_where_literal employeewh0_ 
+				        employee_jpql_literal employeejp0_ 
 				    where
-				        employeewh0_.name=? 
-				        and employeewh0_.salary=?						 
+				        employeejp0_.name=? 
+				        and employeejp0_.salary=?					 
 			*/
-			Query query = em.createQuery("SELECT e FROM EmployeeWhereLiteral e WHERE e.name = ?1 AND e.salary = ?2 ");
+			Query query = em.createQuery("SELECT e FROM EmployeeJPQLLiteral e WHERE e.name = ?1 AND e.salary = ?2 ");
 			query.setParameter(1, "ROSE");
 			query.setParameter(2, 4000);
-			List<EmployeeWhereLiteral> resultList = query.getResultList();
+			List<EmployeeJPQLLiteral> resultList = query.getResultList();
 			resultList.forEach(s -> System.out.printf("Name: %s\n", s.getName()));
-			assertThat(resultList, hasItems(employeeWhereLiteral02));
+			assertThat(resultList, hasItems(employeeJPQLLiteral02));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -458,12 +459,12 @@ public class WhereController {
 			/*
 				Hibernate: 
 				    select
-				        employeewh0_.name as col_0_0_,
-				        employeewh0_.salary as col_1_0_ 
+				        employeejp0_.name as col_0_0_,
+				        employeejp0_.salary as col_1_0_ 
 				    from
-				        employee_where_literal employeewh0_
+				        employee_jpql_literal employeejp0_
 			 */
-			Query query = em.createQuery("SELECT e.name, e.salary FROM EmployeeWhereLiteral e "); 
+			Query query = em.createQuery("SELECT e.name, e.salary FROM EmployeeJPQLLiteral e "); 
 			List<Object[]> resultList = query.getResultList();
 			resultList.forEach(s -> System.out.println(Arrays.toString(s)));
 			List<String> actualValues = resultList.stream().map(s -> Arrays.toString(s)).collect(Collectors.toList());
@@ -485,15 +486,15 @@ public class WhereController {
 			/*
 				Hibernate: 
 				    select
-				        employeewh0_.name as col_0_0_,
-				        employeewh0_.salary as col_1_0_ 
+				        employeejp0_.name as col_0_0_,
+				        employeejp0_.salary as col_1_0_ 
 				    from
-				        employee_where_literal employeewh0_			 
+				        employee_jpql_literal employeejp0_		 		
 			*/
-			Query query = em.createQuery("SELECT NEW entity.jpql.where.EmployeeInfo(e.name, e.salary) FROM EmployeeWhereLiteral e"); 
+			Query query = em.createQuery("SELECT NEW entity.jpql.EmployeeInfo(e.name, e.salary) FROM EmployeeJPQLLiteral e"); 
 			List<EmployeeInfo> resultList = query.getResultList();
 			resultList.forEach(System.out::println);	
-//			assertThat(resultList, containsInAnyOrder(employeeWhereLiteral01, employeeWhereLiteral02, employeeWhereLiteral03));
+//			assertThat(resultList, containsInAnyOrder(employeeJPQLLiteral01, employeeJPQLLiteral02, employeeJPQLLiteral03));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -511,12 +512,13 @@ public class WhereController {
 			/*
 				Hibernate: 
 				    select
-				        employeewh0_.name as col_0_0_,
-				        employeewh0_.salary as col_1_0_ 
+				        employeejp0_.name as col_0_0_,
+				        employeejp0_.salary as col_1_0_,
+				        employeejp0_.role as col_2_0_ 
 				    from
-				        employee_where_literal employeewh0_			 
+				        employee_jpql_literal employeejp0_			 
 			*/
-			TypedQuery<Tuple> query = em.createQuery("SELECT e.name, e.salary, e.role FROM EmployeeWhereLiteral e", Tuple.class);
+			TypedQuery<Tuple> query = em.createQuery("SELECT e.name, e.salary, e.role FROM EmployeeJPQLLiteral e", Tuple.class);
 			List<Tuple> resultList = query.getResultList();
 			System.out.println(resultList);
 			for(Tuple t: resultList) {

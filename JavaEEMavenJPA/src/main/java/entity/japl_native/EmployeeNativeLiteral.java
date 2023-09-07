@@ -1,4 +1,4 @@
-package entity.jpql.where;
+package entity.japl_native;
 
 import java.util.Date;
 import java.util.Objects;
@@ -15,8 +15,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "employee_where_literal")
-public class EmployeeWhereLiteral {
+@Table(name = "employee_native_literal")
+public class EmployeeNativeLiteral {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +38,12 @@ public class EmployeeWhereLiteral {
 	@Column(name = "valid")
 	private Boolean valid;	
 	
-	public EmployeeWhereLiteral() {
+	public EmployeeNativeLiteral() {
 		
 	}
 
 	
-	public EmployeeWhereLiteral(String name, Role role, Integer salary, Date date, Boolean valid) {
+	public EmployeeNativeLiteral(String name, Role role, Integer salary, Date date, Boolean valid) {
 		this.name = name;
 		this.role = role;
 		this.salary = salary;
@@ -117,26 +117,6 @@ public class EmployeeWhereLiteral {
 		ADMIN,
 		SALE;
 	}
-
-	// SELECT DISTINCT 查詢，用來取得成員不重複的集合物件，因此成員類別必須 override hashCode() and equals() method
-	@Override
-	public int hashCode() {
-		return Objects.hash(date, id, name, role, salary, valid);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EmployeeWhereLiteral other = (EmployeeWhereLiteral) obj;
-		return Objects.equals(date, other.date) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& role == other.role && Objects.equals(salary, other.salary) && Objects.equals(valid, other.valid);
-	}
-
 
 	
 	
