@@ -23,18 +23,19 @@ public class NativeController {
 
 	public static void main(String[] args) {	
 //		insert();
-//		queryEqual();
-//		queryEqual2();
-//		queryLarger();
-//		queryEnum();
-//		queryDate();
-//		queryBoolean();
-//		queryASC();
-//		queryDESC();
-//		queryDISTINCT();
-//		queryInnerJoin();
+		queryShowColumns();
+		queryEqual();
+		queryEqual2();
+		queryLarger();
+		queryEnum();
+		queryDate();
+		queryBoolean();
+		queryASC();
+		queryDESC();
+		queryDISTINCT();
+		queryInnerJoin();
 //		queryInnerJoinError();
-
+		
 
 	}
 
@@ -73,6 +74,53 @@ public class NativeController {
 			emf.close();
 		}
 	}	
+	
+	public static void queryShowColumns() {
+	    EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+	    EntityManager em = emf.createEntityManager();
+	    try {
+	    	/*
+				Hibernate: 
+				    SELECT
+				        e.id,
+				        e.local_date,
+				        e.name,
+				        e.role,
+				        e.salary,
+				        e.valid 
+				    FROM
+				        employee_jpql_literal e 	    	 
+	    	*/
+	    	Query query = em.createNativeQuery("SELECT e.id, " + 
+													  "e.local_date, " +
+													  "e.name, " +
+													  "e.role, " +
+													  "e.salary, " +
+													  "e.valid " +
+													  "FROM employee_jpql_literal e ");
+	        List<Object[]> rows = query.getResultList();	
+	        // Java 1.7
+	        /*
+	        for (Object[] row : rows) {
+	            Integer id = (Integer) row[0];
+	            String local_date = ((Date) row[1]).toString();	            
+	            String name = (String) row[2];
+	            String role = (String) row[3];
+	            Integer salary = (Integer) row[4];
+	            Boolean valid = (Boolean) row[5];
+	            System.out.printf("ID: %5d | Local_Date: %10s | Name: %8s | Role: %5s | Salary: %5d | Valid: %b\n", id, local_date, name, role, salary, valid);
+	        }
+	        */
+	        // Java 1.8
+	        rows.forEach(row -> System.out.printf("ID: %5d | Local_Date: %10s | Name: %8s | Role: %5s | Salary: %5d  \n", row[0], ((Date) row[1]).toString(), row[2], row[3], row[4], (Boolean)row[5]));	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        em.close();
+	        emf.close();
+	    }
+	}
+	
 	
 	public static void queryEqual() {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
