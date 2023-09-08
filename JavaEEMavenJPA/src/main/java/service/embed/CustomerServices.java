@@ -1,5 +1,8 @@
 package service.embed;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
-
 import entity.embed.Customer;
 import entity.embed.CustomerItemQty;
 
@@ -23,6 +26,7 @@ public class CustomerServices {
 		emf.close();
 	}
 	
+	// Insert
 	public static void insertCustomerEmbeddedCustomerItemQtyMap() {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
 		EntityManager em = emf.createEntityManager();
@@ -36,11 +40,11 @@ public class CustomerServices {
 			CustomerItemQty c1 = new CustomerItemQty();
 			CustomerItemQty c2 = new CustomerItemQty();
 			// 新增 Customer
-			customer.setName("david");
+			customer.setName("Tim");
 			// 新增 CustomerItemQty
-			c1.setItemName("Salad");
+			c1.setItemName("Hamburger");
 			c1.setItemQty(1);
-			c2.setItemName("tea");
+			c2.setItemName("Black tea");
 			c2.setItemQty(2);
 			// 新增 Many CustomerItemQty 至 Customer
 			Map<String, Integer> itemQtyMap = new HashMap<>();
@@ -62,6 +66,40 @@ public class CustomerServices {
 		}
 	}
 	
+	
+	public static void insertCustomer() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction transaction = em.getTransaction();		
+		try {
+			// Transaction begin
+			transaction.begin();
+			// Create instance of Customer
+			Customer customer = new Customer();
+			// 新增 Customer
+			customer.setName("TTom");
+			LocalDate purchasedDate = LocalDate.of(2023, 9, 8);
+	        Date pd = Customer.convertToLocalDateToDate(purchasedDate);
+	        LocalDate receivedDate = LocalDate.of(2023, 9, 25);
+	        Date rd = Customer.convertToLocalDateToDate(receivedDate);
+	        customer.setPurchasedDate(pd);		
+	        customer.setReceivedDate(rd);					
+			// 執行保存，將 EntityManager 管控的 Entity 釋放，但仍可 Roll-back
+			em.persist(customer);
+			// Flush to Database, and cannot Roll-back
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	// Query
 	public static void queryCustomerEmbeddedCustomerItemQty() {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
 		EntityManager em = emf.createEntityManager();
@@ -162,8 +200,461 @@ public class CustomerServices {
 		}
 	}
 	
+	public static void queryBETWEENByNumber() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.id between 2 and 4			 					
+			*/			
+			TypedQuery<Customer> resultList = em.createQuery("SELECT c FROM Customer c WHERE c.id BETWEEN 2 AND 4 ", Customer.class);
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
 	
 	
+	public static void queryBETWEENByDate() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.purchased_date between ? and ?							 					
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.purchasedDate BETWEEN :startDate AND :endDate ");
+			resultList.setParameter("startDate", Customer.convertToLocalDateToDate(LocalDate.of(2023, 7, 7)));
+			resultList.setParameter("endDate", Customer.convertToLocalDateToDate(LocalDate.of(2023, 9, 15)));
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	public static void queryNOTBETWEENByDate() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.purchased_date not between ? and ?							 					
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.purchasedDate NOT BETWEEN :startDate AND :endDate ");
+			resultList.setParameter("startDate", Customer.convertToLocalDateToDate(LocalDate.of(2023, 5, 7)));
+			resultList.setParameter("endDate", Customer.convertToLocalDateToDate(LocalDate.of(2023, 6, 15)));
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	public static void queryIN() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.name in (
+				            'Tim' , 'Tom'
+				        )										 					
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.name IN('Tim', 'Tom') ");
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
 	
 	
+	public static void queryIN4BindingVariable() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.name in (
+				            ? , ? , ?
+				        ) 									 					
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.name IN :customerNames ");						
+			resultList.setParameter("customerNames", Arrays.asList("Tim", "Tom", "James"));
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	
+	public static void queryLIKEWithWildCard() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*
+				Description: 
+					The underscore '_' represents a single character wildcard. 
+					This means that it will match any single character in the name column, followed by "Tom." 
+				
+				Assuming you have the following data in the table of 'customer_embedded':				
+					id	name
+					1	Tom
+					2	ATom
+					3	BTom
+					4	TTom			
+				
+				Console will be:
+					ID: 2, Name: ATom
+					ID: 3, Name: BTom
+					ID: 4, Name: TTom	
+				
+					
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.name like '_Tom' 
+				    order by
+				        customer0_.id							 				
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.name LIKE '_Tom' ORDER BY c.id ");									
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	public static void queryNOTLIKEWithWildCard() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*
+				Description: 
+					The underscore '_' represents a single character wildcard. 
+					This means that it will match any single character in the name column, followed by "Tom." 
+				
+				Assuming you have the following data in the table of 'customer_embedded':				
+					id	name
+					1	Tom
+					2	ATom
+					3	BTom
+					4	TTom			
+					5	James
+				
+				Console will be:
+					ID: 1, Name: Tom
+					ID: 5, Name: James
+						
+										
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.name not like '_Tom' 
+				    order by
+				        customer0_.id				    							 				
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.name NOT LIKE '_Tom' ORDER BY c.id ");									
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	public static void queryLIKEWithEscapeWildCard() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*				
+				Assuming you have the following data in the table of 'customer_embedded':				
+					id	name
+					1	Tom
+					2	ATom
+					3	BTom
+					4	TTom			
+					
+				Console will be:
+					ID: 1, Name: Tom
+						
+						
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.name like '_Tom' escape '_' 
+				    order by
+				        customer0_.id									 				
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.name LIKE '_Tom' ESCAPE '_' ORDER BY c.id ");									
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	
+	public static void queryNOTLIKEWithEscapeWildCard() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*				
+				Assuming you have the following data in the table of 'customer_embedded':				
+					id	name
+					1	Tom
+					2	ATom
+					3	BTom
+					4	TTom	
+					5   James		
+					
+				Console will be:
+					ID: 2, Name: ATom
+					ID: 3, Name: BTom
+					ID: 4, Name: TTom
+					ID: 5, Name: James
+						
+												
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.name not like '_Tom' escape '_' 
+				    order by
+				        customer0_.id								 				
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.name NOT LIKE '_Tom' ESCAPE '_' ORDER BY c.id ");									
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	public static void queryLIKEWithWildCard02() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*				
+				Description:
+					This query will retrieve all customers whose names start with the letter 'T'. 
+					It uses the % wildcard to match any sequence of characters that follows 'T'. 
+					
+				Assuming you have the following data in the table of 'customer_embedded':				
+					id	name
+					1	Tom
+					2	ATom
+					3	BTom
+					4	TTom	
+					5   James		
+					
+				Console will be:
+					ID: 1, Name: Tom
+					ID: 4, Name: TTom
+					
+																	
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.name like 'T%'									 				
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.name LIKE 'T%' ");									
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	public static void queryLIKEWithWildCard03() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*				
+				Description:
+					This query is looking for customers whose names end with an "o" character followed by any single character (underscore "_").
+					
+				Assuming you have the following data in the table of 'customer_embedded':				
+					id	name
+					1	Tom
+					2	ATom
+					3	BTom
+					4	TTom	
+					5   James		
+					
+				Console will be:
+					ID: 1, Name: Tom
+					ID: 2, Name: ATom
+					ID: 3, Name: BTom
+					ID: 4, Name: TTom
+					
+																	
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.name like '%o_'
+											
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.name LIKE '%o_' ");									
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
+	
+	public static void queryLIKEWithWildCard04() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+		EntityManager em = emf.createEntityManager();
+		try {
+			/*				
+				Description:
+					This query is looking for customers whose names contain an "o" character followed by exactly one character (underscore "_") at any position within the name. 
+					
+					
+				Assuming you have the following data in the table of 'customer_embedded':				
+					id	name
+					1	Tom
+					2	ATom
+					3	BTom
+					4	TTom	
+					5   James		
+					
+				Console will be:
+					ID: 1, Name: Tom
+					ID: 2, Name: ATom
+					ID: 3, Name: BTom
+					ID: 4, Name: TTom
+					
+				Hibernate: 
+				    select
+				        customer0_.id as id1_2_,
+				        customer0_.name as name2_2_,
+				        customer0_.purchased_date as purchase3_2_,
+				        customer0_.received_date as received4_2_ 
+				    from
+				        customer_embedded customer0_ 
+				    where
+				        customer0_.name like '%T_%'																	
+	
+			*/			
+			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.name LIKE '%o_%' ");									
+			List<Customer> list = resultList.getResultList();
+			list.forEach(s -> System.out.printf("ID: %d, Name: %s\n", s.getId(), s.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();			
+		} finally {
+			em.close();
+			emf.close();
+		}
+	}
 }
