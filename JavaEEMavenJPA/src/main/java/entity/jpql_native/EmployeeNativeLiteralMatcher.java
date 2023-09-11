@@ -1,4 +1,4 @@
-package entity.japl_native;
+package entity.jpql_native;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;

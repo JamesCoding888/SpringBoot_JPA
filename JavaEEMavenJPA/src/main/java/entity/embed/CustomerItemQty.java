@@ -6,10 +6,8 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class CustomerItemQty {
 	
-	@Column(name = "item_name")
 	private String itemName;
 	
-	@Column(name = "item_qty")
 	private Integer itemQty;
 
 	public String getItemName() {

@@ -1,10 +1,5 @@
 package controller.embed;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-
 import service.embed.CustomerServices;
 
 public class CustomerController {
@@ -31,8 +26,16 @@ public class CustomerController {
 //		CustomerServices.queryLIKEWithEscapeWildCard();
 //		CustomerServices.queryNOTLIKEWithEscapeWildCard();
 //		CustomerServices.queryLIKEWithWildCard02();
-		CustomerServices.queryLIKEWithWildCard03();
-		CustomerServices.queryLIKEWithWildCard04();
+//		CustomerServices.queryLIKEWithWildCard03();
+//		CustomerServices.queryLIKEWithWildCard04();
+//		CustomerServices.queryIsNULL();
+//		CustomerServices.queryIsNULL4CollectionTypeError();
+//		CustomerServices.queryIsNotNULL4CollectionType();
+//		CustomerServices.queryIsNotNULL();
+//		CustomerServices.queryIsEmpty();
+//		CustomerServices.queryIsNotEmpty();
+//		CustomerServices.queryIsEmpty4CollectionType();
+//		CustomerServices.queryIsNotEmpty4CollectionType();
 	}
 	
 }

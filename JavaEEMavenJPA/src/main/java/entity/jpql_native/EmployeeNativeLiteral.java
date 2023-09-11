@@ -1,4 +1,4 @@
-package entity.japl_native;
+package entity.jpql_native;
 
 import java.util.Date;
 import java.util.Objects;

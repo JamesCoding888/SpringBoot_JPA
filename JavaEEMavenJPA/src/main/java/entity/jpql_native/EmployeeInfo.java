@@ -1,4 +1,4 @@
-package entity.japl_native;
+package entity.jpql_native;
 
 public class EmployeeInfo {
 	

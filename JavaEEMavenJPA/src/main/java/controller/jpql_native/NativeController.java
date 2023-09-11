@@ -9,8 +9,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import entity.japl_native.EmployeeNativeLiteral;
-import entity.japl_native.EmployeeNativeLiteral.Role;
+
+import entity.jpql_native.EmployeeNativeLiteral;
+import entity.jpql_native.EmployeeNativeLiteral.Role;
 import service.embed.SpecificDateTimeSetter;
 
 public class NativeController {
