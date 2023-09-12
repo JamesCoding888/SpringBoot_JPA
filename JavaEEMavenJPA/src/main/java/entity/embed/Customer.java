@@ -49,8 +49,6 @@ public class Customer {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date receivedDate;
 	
-	
-	
 	public Integer getId() {		
 		return id;
 	}
@@ -90,7 +88,6 @@ public class Customer {
 	public void setReceivedDate(Date receivedDate) {
 		this.receivedDate = receivedDate;
 	}
-
 	
 	public static Date convertToLocalDateToDate(LocalDate localDate) {
         // Step 1: Convert LocalDate to LocalDateTime at midnight (00:00:00)

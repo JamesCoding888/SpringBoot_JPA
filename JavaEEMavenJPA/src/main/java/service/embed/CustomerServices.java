@@ -872,7 +872,7 @@ public class CustomerServices {
 				            customer0_.id=itemqtymap1_.customer_id))	
 				
 				Note:
-				此 'EMPTY' 語法，需更改 pom.xml 的 dependency 版本，如下
+				此 'EMPTY' 語法，需更改 pom.xml 的 hibernate-core 及 hibernate-entitymanager 版本，如下
 				  
 				<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 				<dependency>
@@ -889,7 +889,7 @@ public class CustomerServices {
 				</dependency>
 				
 				====================================================================================================================================================================================
-				若不修改 dependency 版本，會遇到此錯誤訊息:
+				若不修改版本，會遇到此錯誤訊息:
 				'java.lang.IllegalArgumentException: org.hibernate.hql.internal.ast.QuerySyntaxException: unexpected end of subtree [SELECT c FROM Customer c WHERE c.itemQtyMap IS EMPTY  ]'		 
 			*/
 			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.itemQtyMap IS EMPTY");
@@ -953,7 +953,7 @@ public class CustomerServices {
 				  
 				====================================================================================================================================================================================
 				Note:
-				此 'EMPTY' 語法，需更改 pom.xml 的 dependency 版本，如下
+				此 'EMPTY' 語法，需更改 pom.xml 的 hibernate-core 及 hibernate-entitymanager 版本，如下
 				  
 				<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 				<dependency>
@@ -970,7 +970,7 @@ public class CustomerServices {
 				</dependency>		
 				  
 				====================================================================================================================================================================================
-				若不修改 dependency 版本，會遇到此錯誤訊息:
+				若不修改版本，會遇到此錯誤訊息:
 				'java.lang.IllegalArgumentException: org.hibernate.hql.internal.ast.QuerySyntaxException: unexpected end of subtree [SELECT c FROM Customer c WHERE c.itemQtyMap IS NOT EMPTY  ]'
 			*/
 			Query resultList = em.createQuery("SELECT c FROM Customer c WHERE c.itemQtyMap IS NOT EMPTY");
@@ -983,5 +983,9 @@ public class CustomerServices {
 			emf.close();
 		}
 	}
+	
+	
+	
+	
 	
 }

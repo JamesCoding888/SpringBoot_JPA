@@ -6,7 +6,7 @@ public class CustomerController {
 	public static void main(String[] args) {
 		
 		// Create
-//		CustomerServices.create("mydb");
+		CustomerServices.create("mydb");
 		
 		// Insert
 //		CustomerServices.insertCustomerEmbeddedCustomerItemQtyMap();
