@@ -6,14 +6,19 @@ public class ProfileController {
 	public static void main(String[] args) {
 		
 		// Create
-		ProfileServices.create();
+//		ProfileServices.create();
 		
 		// Insert
-		ProfileServices.insert();
+//		ProfileServices.insertProfile();
+//		ProfileServices.insertJobInfo();
 		
 		// Query
-		ProfileServices.queryProfilesWithMoreThanNumericNumbers();
-		ProfileServices.queryProfilesWithSalaryUnderAverage();
-		ProfileServices.queryProfilesWithSalaryAboveAverage();
+//		ProfileServices.queryProfilesWithMoreThanNumericNumbers();
+//		ProfileServices.queryProfilesWithSalaryUnderAverage();
+//		ProfileServices.queryProfilesWithSalaryAboveAverage();
+//		ProfileServices.queryAverageSalaryByDepartment();
+//		ProfileServices.queryDepartmentsWithAboveAverageSalary();
+		ProfileServices.queryProfilesWithMatchingJobInfo();
+		ProfileServices.queryProfilesWithNotMatchingJobInfo();
 	}
 }
