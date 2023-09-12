@@ -54,6 +54,10 @@
         <class>entity.embed.Customer</class>   
         <!-- Entity CustomerItemQty -->
         <class>entity.embed.CustomerItemQty</class>     
+        <!-- Entity PurchasedOrder -->
+        <class>entity.aggregation.PurchasedOrder</class>
+        <!-- Entity PurchasedOrder -->
+        <class>entity.subquery.Profile</class>        
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />            
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mydb?characterEncoding=utf-8" />
