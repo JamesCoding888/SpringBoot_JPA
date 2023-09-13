@@ -13,11 +13,11 @@ public class ProfileController {
 //		ProfileServices.insertJobInfo();
 		
 		// Query
-//		ProfileServices.queryProfilesWithMoreThanNumericNumbers();
-//		ProfileServices.queryProfilesWithSalaryUnderAverage();
-//		ProfileServices.queryProfilesWithSalaryAboveAverage();
-//		ProfileServices.queryAverageSalaryByDepartment();
-//		ProfileServices.queryDepartmentsWithAboveAverageSalary();
+		ProfileServices.queryProfilesWithMoreThanNumericNumbers();
+		ProfileServices.queryProfilesWithSalaryUnderAverage();
+		ProfileServices.queryProfilesWithSalaryAboveAverage();
+		ProfileServices.queryAverageSalaryByDepartment();
+		ProfileServices.queryDepartmentsWithAboveAverageSalary();
 		ProfileServices.queryProfilesWithMatchingJobInfo();
 		ProfileServices.queryProfilesWithNotMatchingJobInfo();
 	}
