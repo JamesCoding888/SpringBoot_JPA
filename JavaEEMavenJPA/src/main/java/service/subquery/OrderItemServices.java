@@ -108,7 +108,6 @@ public class OrderItemServices {
 		try {			
 			/*
 				Description:
-					Let's explain the difference, 
 					1) In the previous code using ALL, it selected records from OrderItem where the quantity of the item was greater than all values returned by the subquery. 
 					   This means that the condition had to hold for every record in the subquery's result.
 					2) In the current code using ANY, it selects records from OrderItem where the quantity of the item is greater than at least one value returned by the subquery. 

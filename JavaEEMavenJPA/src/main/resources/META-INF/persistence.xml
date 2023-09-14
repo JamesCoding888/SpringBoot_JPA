@@ -57,7 +57,15 @@
         <!-- Entity PurchasedOrder -->
         <class>entity.aggregation.PurchasedOrder</class>
         <!-- Entity PurchasedOrder -->
-        <class>entity.subquery.Profile</class>        
+        <class>entity.subquery.Profile</class> 
+        <!-- Entity JobInfo -->
+        <class>entity.subquery.JobInfo</class>        
+        <!-- Entity OrderItem -->
+        <class>entity.subquery.OrderItem</class> 
+        <!-- Entity ProductInventory -->
+        <class>entity.subquery.ProductInventory</class> 
+        <!-- Entity Stock -->
+        <class>entity.jpql_function.Stock</class>        
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />            
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mydb?characterEncoding=utf-8" />
