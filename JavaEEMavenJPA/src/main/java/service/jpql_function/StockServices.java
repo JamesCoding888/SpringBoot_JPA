@@ -29,10 +29,10 @@ public class StockServices {
 				transaction.begin();
 				Stock stock1 = new Stock("2330", "TSMC", 650.0);
 				Stock stock2 = new Stock("2303", "UMC", 47.3);
-				Stock stock3 = new Stock("00900", "Fubon Taiwan Index high dividend 30 ETF", 12.72);
+				Stock stock3 = new Stock("00900", "Fubon Taiwan Index high dividend 30 ETF", 12.72);	
 				em.persist(stock1);
 				em.persist(stock2);
-				em.persist(stock3);
+				em.persist(stock3);				
 				transaction.commit();
 			} catch(Exception e) {
 				e.printStackTrace();
@@ -342,6 +342,62 @@ public class StockServices {
 			}
 		}
 		
+		
+		public static void queryByLocate() {
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("mydb");
+			EntityManager em = emf.createEntityManager();
+			try {
+				/*
+				    Description:
+				    	In this query, LOCATE('i', s.name) is used to find the position of the first occurrence of 'i' in the "name" field. 
+				    	The SUBSTRING function then extracts a substring starting from that position to the end of the "name" field. 
+				    	The TRIM function is applied to remove any leading or trailing spaces. 
+				    	This query will return a substring that includes the 'i' character and the characters that follow it in the "name" field.
+				    
+				    =======================================================================================================================================================================================================================================
+				    	
+					Hibernate: 
+					    select
+					        distinct trim(substring(stock0_.name,
+					        locate('i',
+					        stock0_.name))) as col_0_0_ 
+					    from
+					        stock stock0_ 
+					    order by
+					        col_0_0_				 
+				*/
+				Query query1 = em.createQuery("SELECT DISTINCT TRIM(SUBSTRING(s.name, LOCATE('i', s.name))) AS location FROM Stock s ORDER BY location ");
+				/*
+				    Description:
+				    	In this query, LOCATE('i', s.name) + 1 is used to find the position of the first occurrence of 'i' in the "name" field and then add 1 to that position. 
+				    	The SUBSTRING function extracts a substring starting from the position after the first occurrence of 'i', effectively excluding the 'i' character itself. 
+				    	The TRIM function is applied to remove any leading or trailing spaces. 
+				    	This query will return a substring that includes the characters immediately following the 'i' character in the "name" field.
+
+					=======================================================================================================================================================================================================================================
+					
+					Hibernate: 
+					    select
+					        distinct trim(substring(stock0_.name,
+					        locate('i',
+					        stock0_.name)+1)) as col_0_0_ 
+					    from
+					        stock stock0_ 
+					    order by
+					        col_0_0_				 
+				*/
+				Query query2 = em.createQuery("SELECT DISTINCT TRIM(SUBSTRING(s.name, LOCATE('i', s.name)+1)) AS location FROM Stock s ORDER BY location ");
+				List<String> resultList1 = query1.getResultList();
+				resultList1.forEach(System.out::println);
+				List<String> resultList2 = query2.getResultList();
+				resultList2.forEach(System.out::println);				
+			} catch(Exception e) {
+				e.printStackTrace();
+			} finally {
+				em.close();
+				emf.close();
+			}			
+		}
 		
 		
 		

@@ -20,8 +20,8 @@ public class StockController {
 //		StockServices.queryUPPER();
 //		StockServices.queryNameSubstringWithLengthById();
 //		StockServices.queryNameSubstringById();
-		StockServices.queryNameByTRIM();
-		
+//		StockServices.queryNameByTRIM();
+		StockServices.queryByLocate();
 		
 	}
 }

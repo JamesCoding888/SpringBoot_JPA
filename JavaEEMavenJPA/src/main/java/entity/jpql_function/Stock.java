@@ -23,6 +23,7 @@ public class Stock {
 	
 	@Column(name = "price")
 	private Double price;
+
 	
 	public Stock() {
 		super();
@@ -82,6 +83,8 @@ public class Stock {
 	public String toString() {
 		return "Stock [id=" + id + ", symbol=" + symbol + ", name=" + name + ", price=" + price + "]";
 	}
+
+
 
 	
 	
